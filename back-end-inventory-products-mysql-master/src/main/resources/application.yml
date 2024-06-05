@@ -1,0 +1,32 @@
+## Configuracion de Spring
+spring:
+  application:
+    name: ms-inventory-products
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/unir_db} #Actualizar con el valor de tu despliegue local de MySQL.
+    driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
+    username: root #Actualizar con el valor de tu usuario.
+    password: milozvirus #Actualizar con el valor de tu contraseña de root.
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+## Configuracion de Instancia 
+server:
+  port: 8088
+
+## Configuracion del cliente de Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+  instance:
+    preferIpAddress: true
+    hostname: ms-inventory-products
