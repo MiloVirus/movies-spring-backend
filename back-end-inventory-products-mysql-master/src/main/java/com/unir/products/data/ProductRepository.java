@@ -8,6 +8,5 @@ import com.unir.products.model.pojo.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-	List<Product> findByName(String name);
-	List<Product> findByDirectorIgnoreCase(String director);
+
 }

@@ -1,7 +1,8 @@
 package com.unir.products.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,83 @@ public class ProductsServiceImpl implements ProductsService {
 		List<Product> products = repository.findAll();
 		return products.isEmpty() ? null : products;
 	}
+
+	private boolean matchesFilter(Product product, Map<String, String> params) {
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			String paramKey = entry.getKey();
+			String paramValue = entry.getValue();
+			switch (paramKey) {
+				case "name":
+
+					if (!product.getName().toLowerCase().contains(paramValue.toLowerCase())) {
+						return false;
+					}
+					break;
+				case "description":
+
+					if (!product.getDescription().toLowerCase().contains(paramValue.toLowerCase())) {
+						return false;
+					}
+					break;
+				case "director":
+
+					if (!product.getDirector().equalsIgnoreCase(paramValue)) {
+						return false;
+					}
+					break;
+				case "year":
+
+					if (product.getYear().equalsIgnoreCase(paramValue)) {
+						return false;
+					}
+					break;
+				case "critiques":
+
+					if (product.getCritiques().equalsIgnoreCase(paramValue)) {
+						return false;
+					}
+					break;
+				case "length":
+
+					if (product.getLength().equalsIgnoreCase(paramValue)) {
+						return false;
+					}
+					break;
+				case "category":
+
+					if (!product.getCategory().equalsIgnoreCase(paramValue)) {
+						return false;
+					}
+					break;
+				case "stars":
+					if (product.getStars().equalsIgnoreCase(paramValue)) {
+						return false;
+					}
+					break;
+				case "visible":
+
+					if (product.getVisible() != Boolean.parseBoolean(paramValue)) {
+						return false;
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		return true;
+	}
 	@Override
-	public List<Product> getProductsByDirector(String director) {
-		return repository.findByDirectorIgnoreCase(director);
+	public List<Product> getProductsByParameters(Map<String, String> params) {
+		List<Product> filteredProducts = new ArrayList<>();
+		List<Product> allProducts = repository.findAll();
+
+		for (Product product : allProducts) {
+			if (matchesFilter(product, params)) {
+				filteredProducts.add(product);
+			}
+		}
+
+		return filteredProducts;
 	}
 
 	@Override
@@ -33,6 +108,10 @@ public class ProductsServiceImpl implements ProductsService {
 		return repository.findById(Long.valueOf(productId)).orElse(null);
 	}
 
+	@Override
+	public List<Product> getProductsByDirector(String director) {
+		return null;
+	}
 
 
 	@Override

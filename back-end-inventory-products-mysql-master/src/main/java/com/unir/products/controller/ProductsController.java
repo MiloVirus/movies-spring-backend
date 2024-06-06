@@ -20,7 +20,7 @@ public class ProductsController {
 
 	private final ProductsService service;
 
-	@GetMapping("/products")
+	/*@GetMapping("/products")
 	public ResponseEntity<List<Product>> getProducts(@RequestHeader Map<String, String> headers) {
 
 		log.info("headers: {}", headers);
@@ -31,7 +31,7 @@ public class ProductsController {
 		} else {
 			return ResponseEntity.ok(Collections.emptyList());
 		}
-	}
+	}*/
 
 	@GetMapping("/products/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable String productId) {
@@ -47,20 +47,38 @@ public class ProductsController {
 
 	}
 
-	@GetMapping(value = "/products", params = "director")
-	public ResponseEntity<List<Product>> getProducts(@RequestParam (required = false) String director) {
-
-		List<Product> products = service.getProducts();
-		List<Product> productsDirector = service.getProductsByDirector(director);
-
-		if( director == "")
-		{
-			return ResponseEntity.ok(products);
+	@GetMapping(value = "/products")
+	public ResponseEntity<List<Product>> getProducts(@RequestParam Map<String, String> params) {
+		if (params.isEmpty()) {
+			// If no parameters provided, return all products
+			List<Product> allProducts = service.getProducts();
+			return ResponseEntity.ok(allProducts);
+		} else {
+			// Otherwise, filter products based on provided parameters
+			List<Product> filteredProducts = service.getProductsByParameters(params);
+			return ResponseEntity.ok(filteredProducts);
 		}
-		else{
-			return ResponseEntity.ok(productsDirector);
+	}
+
+	private boolean matchesFilter(Product product, Map<String, String> params) {
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			String paramKey = entry.getKey();
+			String paramValue = entry.getValue();
+
+			// Implement your logic to check if the product matches the filter criteria
+			// For example, if the parameter key is "director", check if the product's director matches the provided value
+			// Similarly, you can implement logic for other parameters such as category, price range, etc.
+
+			// Example: Check if product director matches the provided director parameter
+			if ("director".equalsIgnoreCase(paramKey) && !product.getDirector().equalsIgnoreCase(paramValue)) {
+				return false;
+			}
+
+			// Add more conditions for other parameters as needed
 		}
 
+		// If the product matches all filter criteria, return true
+		return true;
 	}
 
 	@DeleteMapping("/products/{productId}")
@@ -90,3 +108,4 @@ public class ProductsController {
 	}
 
 }
+
