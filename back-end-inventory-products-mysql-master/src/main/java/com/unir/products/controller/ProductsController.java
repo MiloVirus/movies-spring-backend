@@ -37,11 +37,9 @@ public class ProductsController {
 	@GetMapping(value = "/products")
 	public ResponseEntity<List<Product>> getProducts(@RequestParam Map<String, String> params) {
 		if (params.isEmpty()) {
-			// If no parameters provided, return all products
 			List<Product> allProducts = service.getProducts();
 			return ResponseEntity.ok(allProducts);
 		} else {
-			// Otherwise, filter products based on provided parameters
 			List<Product> filteredProducts = service.getProductsByParameters(params);
 			return ResponseEntity.ok(filteredProducts);
 		}
