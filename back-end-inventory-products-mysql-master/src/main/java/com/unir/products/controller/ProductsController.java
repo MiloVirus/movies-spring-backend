@@ -20,19 +20,6 @@ public class ProductsController {
 
 	private final ProductsService service;
 
-	/*@GetMapping("/products")
-	public ResponseEntity<List<Product>> getProducts(@RequestHeader Map<String, String> headers) {
-
-		log.info("headers: {}", headers);
-		List<Product> products = service.getProducts();
-
-		if (products != null) {
-			return ResponseEntity.ok(products);
-		} else {
-			return ResponseEntity.ok(Collections.emptyList());
-		}
-	}*/
-
 	@GetMapping("/products/{productId}")
 	public ResponseEntity<Product> getProduct(@PathVariable String productId) {
 
@@ -59,28 +46,6 @@ public class ProductsController {
 			return ResponseEntity.ok(filteredProducts);
 		}
 	}
-
-	private boolean matchesFilter(Product product, Map<String, String> params) {
-		for (Map.Entry<String, String> entry : params.entrySet()) {
-			String paramKey = entry.getKey();
-			String paramValue = entry.getValue();
-
-			// Implement your logic to check if the product matches the filter criteria
-			// For example, if the parameter key is "director", check if the product's director matches the provided value
-			// Similarly, you can implement logic for other parameters such as category, price range, etc.
-
-			// Example: Check if product director matches the provided director parameter
-			if ("director".equalsIgnoreCase(paramKey) && !product.getDirector().equalsIgnoreCase(paramValue)) {
-				return false;
-			}
-
-			// Add more conditions for other parameters as needed
-		}
-
-		// If the product matches all filter criteria, return true
-		return true;
-	}
-
 	@DeleteMapping("/products/{productId}")
 	public ResponseEntity<Void> deleteProduct(@PathVariable String productId) {
 
