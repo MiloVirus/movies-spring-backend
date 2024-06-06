@@ -1,18 +1,10 @@
 package com.unir.products.controller;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.unir.products.model.pojo.Product;
 import com.unir.products.model.request.CreateProductRequest;
@@ -51,6 +43,22 @@ public class ProductsController {
 			return ResponseEntity.ok(product);
 		} else {
 			return ResponseEntity.notFound().build();
+		}
+
+	}
+
+	@GetMapping(value = "/products", params = "director")
+	public ResponseEntity<List<Product>> getProducts(@RequestParam (required = false) String director) {
+
+		List<Product> products = service.getProducts();
+		List<Product> productsDirector = service.getProductsByDirector(director);
+
+		if( director == "")
+		{
+			return ResponseEntity.ok(products);
+		}
+		else{
+			return ResponseEntity.ok(productsDirector);
 		}
 
 	}

@@ -1,6 +1,7 @@
 package com.unir.products.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,17 @@ public class ProductsServiceImpl implements ProductsService {
 		List<Product> products = repository.findAll();
 		return products.isEmpty() ? null : products;
 	}
+	@Override
+	public List<Product> getProductsByDirector(String director) {
+		return repository.findByDirectorIgnoreCase(director);
+	}
 
 	@Override
 	public Product getProduct(String productId) {
 		return repository.findById(Long.valueOf(productId)).orElse(null);
 	}
+
+
 
 	@Override
 	public Boolean removeProduct(String productId) {
