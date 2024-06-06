@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.unir.products.model.pojo.ProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -109,12 +110,6 @@ public class ProductsServiceImpl implements ProductsService {
 	}
 
 	@Override
-	public List<Product> getProductsByDirector(String director) {
-		return null;
-	}
-
-
-	@Override
 	public Boolean removeProduct(String productId) {
 
 		Product product = repository.findById(Long.valueOf(productId)).orElse(null);
@@ -140,6 +135,43 @@ public class ProductsServiceImpl implements ProductsService {
 					.stars(request.getStars()).visible(request.getVisible()).build();
 
 			return repository.save(product);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public Product updateProduct(String productId, String updateRequest) {
+		return null;
+	}
+
+	/*@Override
+	public Product updateProduct(String productId, String updateRequest) {
+		//PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
+		Product product = repository.getById(Long.valueOf(productId));
+		if (product != null) {
+			try {
+				JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
+				JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(product)));
+				Product patched = objectMapper.treeToValue(target, Product.class);
+				repository.save(patched);
+				return patched;
+			} catch (JsonProcessingException | JsonPatchException e) {
+				log.error("Error updating product {}", productId, e);
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}*/
+
+	@Override
+	public Product updateProduct(String productId, ProductDto updateRequest) {
+		Product product = repository.getById(Long.valueOf(productId));
+		if (product != null) {
+			product.update(updateRequest);
+			repository.save(product);
+			return product;
 		} else {
 			return null;
 		}

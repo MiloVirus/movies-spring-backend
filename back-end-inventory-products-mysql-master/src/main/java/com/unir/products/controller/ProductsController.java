@@ -2,6 +2,7 @@ package com.unir.products.controller;
 
 import java.util.*;
 
+import com.unir.products.model.pojo.ProductDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +69,18 @@ public class ProductsController {
 			return ResponseEntity.badRequest().build();
 		}
 
+	}
+
+	public ResponseEntity<Product> updateProduct(@PathVariable String productId, @RequestBody ProductDto body)
+	{
+		Product updated = service.updateProduct(productId, body);
+		if(updated != null)
+		{
+			return ResponseEntity.ok(updated);
+		}
+		else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 }
