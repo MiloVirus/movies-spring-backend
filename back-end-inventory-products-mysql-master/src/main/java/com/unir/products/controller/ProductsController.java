@@ -70,7 +70,7 @@ public class ProductsController {
 		}
 
 	}
-
+	@PutMapping("/products/{productId}")
 	public ResponseEntity<Product> updateProduct(@PathVariable String productId, @RequestBody ProductDto body)
 	{
 		Product updated = service.updateProduct(productId, body);
