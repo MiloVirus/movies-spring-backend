@@ -83,5 +83,17 @@ public class ProductsController {
 		}
 	}
 
+	@PatchMapping("/products/{productId}")
+	public ResponseEntity<Product> patchProduct(@PathVariable String productId, @RequestBody String patchBody) {
+
+		Product patched = service.updateProduct(productId, patchBody);
+		if (patched != null) {
+			return ResponseEntity.ok(patched);
+		} else {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+
 }
 

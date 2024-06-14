@@ -3,21 +3,30 @@ package com.unir.products.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatchException;
+import com.github.fge.jsonpatch.mergepatch.JsonMergePatch;
+import com.unir.products.data.ProductRepository;
 import com.unir.products.model.pojo.ProductDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.unir.products.data.ProductRepository;
 import com.unir.products.model.pojo.Product;
 import com.unir.products.model.request.CreateProductRequest;
 
 @Service
+@Slf4j
 public class ProductsServiceImpl implements ProductsService {
 
 	@Autowired
 	private ProductRepository repository;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Override
 	public List<Product> getProducts() {
@@ -140,18 +149,14 @@ public class ProductsServiceImpl implements ProductsService {
 		}
 	}
 
-	@Override
-	public Product updateProduct(String productId, String updateRequest) {
-		return null;
-	}
 
-	/*@Override
+	@Override
 	public Product updateProduct(String productId, String updateRequest) {
 		//PATCH se implementa en este caso mediante Merge Patch: https://datatracker.ietf.org/doc/html/rfc7386
 		Product product = repository.getById(Long.valueOf(productId));
 		if (product != null) {
 			try {
-				JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(request));
+				JsonMergePatch jsonMergePatch = JsonMergePatch.fromJson(objectMapper.readTree(updateRequest));
 				JsonNode target = jsonMergePatch.apply(objectMapper.readTree(objectMapper.writeValueAsString(product)));
 				Product patched = objectMapper.treeToValue(target, Product.class);
 				repository.save(patched);
@@ -163,7 +168,7 @@ public class ProductsServiceImpl implements ProductsService {
 		} else {
 			return null;
 		}
-	}*/
+	}
 
 	@Override
 	public Product updateProduct(String productId, ProductDto updateRequest) {
